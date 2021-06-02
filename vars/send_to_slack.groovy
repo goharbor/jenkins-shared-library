@@ -4,5 +4,5 @@ def call(String channel, token, teamDomain){
         token: token,
         teamDomain: teamDomain,
         color: currentBuild.currentResult == "SUCCESS" ? "good" : "danger",
-        message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}, taking ${currentBuild.durationString.replace(' and counting', '')}\n More info at: ${env.BUILD_URL}")
+        message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME}#${env.BUILD_NUMBER}, takes ${currentBuild.durationString.replace(' and counting', '')}\n More info at: ${env.BUILD_URL}")
 }
