@@ -56,7 +56,7 @@ def call(FreshInstallPipelineSettings settings) {
         } finally {
             publish_test_result("workdir/result")
             withCredentials([string(credentialsId: "slack-token", variable: "SLACK_TOKEN")]) {
-                send_to_slack("#yinw-channel", env.SLACK_TOKEN, "vmware")
+                send_to_slack("#harbor-nightly-result", env.SLACK_TOKEN, "vmware")
             }
         }
     }

@@ -1,4 +1,4 @@
-@Library('library@main') _
+@Library('harbor@main') _
 import io.goharbor.*
 
 // the pipeline to run the E2E test cases against Harbor instance on demand
