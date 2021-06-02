@@ -1,0 +1,59 @@
+@Library('library@main') _
+import io.goharbor.*
+
+// the pipeline to run the E2E test cases against Harbor instance on demand
+// if the Harbor instance is deployed on Kubernetes cluster, the pipeline can import trivy database for testing automatically, otherwise users
+// should make sure the trivy database is imported into trivy before running the tests
+node() {
+    try{
+        properties([
+            parameters([
+                string(name: 'version', defaultValue: 'main', description: 'The version of the Harbor instance. e.g. "v2.3.0" for Harbor v2.3.0, "main" for Harbor deployed from master branch'),
+                string(name: 'core_service_url', defaultValue: 'https://harbor.local'),
+                string(name: 'notary_service_url', defaultValue: 'https://notary.harbor.local'),
+                string(name: 'host_ip_mappings', description: 'The host-to-ip mappings, split multiple items by comma, e.g. harbor.local:192.168.0.1,notary.harbor.local:192.168.0.1'),
+                string(name: 'proxy', description: 'The HTTP proxy used to connect to the Harbor instance. e.g. http://proxy.local:3128'),
+                password(name: 'admin_password', description: 'Default: Harbor12345'),
+                choice(name: "auth_mode", choices: ["database", "ldap", "oidc", "uaa", "http-auth-proxy"]),
+                extendedChoice(name: 'components', type: 'PT_CHECKBOX', value:'trivy,notary,chartmuseum', defaultValue: 'trivy,notary,chartmuseum', multiSelectDelimiter: ',', description: 'The enabled components'),
+                text(name: 'kube_config', description: 'The content of kube config file. Used for importing Trivy database'),
+                string(name: 'kube_context', description: 'The name of the kube config context to use. Used for importing Trivy database'),
+                string(name: 'namespace', description: 'The namespace where Harbor is deployed in. Used for importing Trivy database')
+            ]),
+            buildDiscarder(strategy: logRotator(numToKeepStr: "15"))
+        ])
+
+        cleanWs() // clean the workspace before running
+        // checkout scm
+
+        HarborInstance instance = new HarborInstance()
+        instance.coreServiceURL = params.core_service_url
+        instance.notaryServiceURL = params.notary_service_url
+        instance.hostIPMappings = params.host_ip_mappings
+        instance.adminPassword = params.admin_password
+        instance.authMode = params.auth_mode
+        instance.components = params.components
+        instance.proxy = params.proxy
+
+        stage('Health-Check') {
+            check_health(instance)
+        }
+        stage('Pre-Test') {
+            // when the kube_config is provided, import the trivy db
+            if(params.kube_config){
+                writeFile file: "kube_config", text: params.kube_config
+                import_trivy_db("$env.WORKSPACE/kube_config", params.kube_context, params.namespace, params.proxy)
+            }
+        }
+        stage('Test') {
+            CaseSettings caseSettings = new CaseSettings()
+            caseSettings.branch = "master" // change the branch to the specific one when releases new version
+            run_test_case(instance, caseSettings, "workdir")
+        }
+    } catch(e){
+        // since we're catching the exception in order to report on it, we need to re-throw it, to ensure that the build is marked as failed
+        throw e
+    } finally{
+        publish_test_result("workdir/result")
+    }
+}
