@@ -53,6 +53,6 @@ The experimental [shared libraries](https://www.jenkins.io/doc/book/pipeline/sha
 - [run_fresh_install_pipeline](./vars/run_fresh_install_pipeline.groovy)
 
 ## Pipelines
-- [Run tests on demand](./Jenkinsfile_on_demand)
+- [Run tests on demand](./pipelines/e2e_test_on_demand)
 
 

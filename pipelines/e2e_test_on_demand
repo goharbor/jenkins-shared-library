@@ -8,7 +8,7 @@ node() {
     try{
         properties([
             parameters([
-                string(name: 'version', defaultValue: 'main', description: 'The version of the Harbor instance. e.g. "v2.3.0" for Harbor v2.3.0, "main" for Harbor deployed from master branch'),
+                choice(name: "version", choices: ["main", "2.3"], description: 'The version of the Harbor instance. e.g. "2.3" for Harbor v2.3.x, "main" for Harbor deployed from master branch'),
                 string(name: 'core_service_url', defaultValue: 'https://harbor.local'),
                 string(name: 'notary_service_url', defaultValue: 'https://notary.harbor.local'),
                 string(name: 'host_ip_mappings', description: 'The host-to-ip mappings, split multiple items by comma, e.g. harbor.local:192.168.0.1,notary.harbor.local:192.168.0.1'),
