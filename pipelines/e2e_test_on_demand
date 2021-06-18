@@ -5,7 +5,7 @@ import io.goharbor.*
 // if the Harbor instance is deployed on Kubernetes cluster, the pipeline can import trivy database for testing automatically, otherwise users
 // should make sure the trivy database is imported into trivy before running the tests
 node() {
-    try{
+    catchError {
         properties([
             parameters([
                 choice(name: "version", choices: ["main", "2.3"], description: 'The version of the Harbor instance. e.g. "2.3" for Harbor v2.3.x, "main" for Harbor deployed from master branch'),
@@ -50,10 +50,6 @@ node() {
             caseSettings.branch = "master" // change the branch to the specific one when releases new version
             run_test_case(instance, caseSettings, "workdir")
         }
-    } catch(e){
-        // since we're catching the exception in order to report on it, we need to re-throw it, to ensure that the build is marked as failed
-        throw e
-    } finally{
-        publish_test_result("workdir/result")
     }
+    publish_test_result("workdir/result")
 }

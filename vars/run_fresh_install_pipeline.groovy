@@ -4,7 +4,7 @@ import io.goharbor.*
 // callers are responsible for the customized parts(e.g. installation) by implementing the abstract class "io.goharbor.FreshInstallPipelineExecutor"
 def call(FreshInstallPipelineSettings settings) {
     node(settings.node) {
-        try{
+        catchError {
             // set pipeline properties if defined
             if (settings.properties){
                 properties(settings.properties())
@@ -16,7 +16,7 @@ def call(FreshInstallPipelineSettings settings) {
             HarborInstance instance
 
             stage('Pre-Install') {
-                 settings.executor.preInstall()
+                settings.executor.preInstall()
             }
             stage('Install') {
                 instance = settings.executor.install()
@@ -50,14 +50,13 @@ def call(FreshInstallPipelineSettings settings) {
             stage('Post-Test') {
                 settings.executor.postTest()
             }
-        } catch(e){
-            // since we're catching the exception in order to report on it, we need to re-throw it, to ensure that the build is marked as failed
-            throw e
-        } finally {
+        }
+        // wrapped by catchError to make sure the result is always sent to slack channel
+        catchError {
             publish_test_result("workdir/result")
-            withCredentials([string(credentialsId: "slack-token", variable: "SLACK_TOKEN")]) {
+        }
+        withCredentials([string(credentialsId: "slack-token", variable: "SLACK_TOKEN")]) {
                 send_to_slack("#harbor-nightly-result", env.SLACK_TOKEN, "vmware")
-            }
         }
     }
 }
