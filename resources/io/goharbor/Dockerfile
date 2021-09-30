@@ -1,5 +1,5 @@
 # build the new e2e engine image based on the harbor-e2e-engine one
-FROM harbor-repo.vmware.com/harbor-ci/goharbor/harbor-e2e-engine:3.0.1-ui
+FROM harbor-repo.vmware.com/harbor-ci/goharbor/harbor-e2e-engine:4.0.0-ui
 
 ARG KUBECTL_VERSION="v1.14.1"
 
