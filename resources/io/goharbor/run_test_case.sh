@@ -350,5 +350,6 @@ else
   docker_run_options="-it ${docker_run_options}"
 fi
 
-docker run --pull=always ${docker_run_options} --init --privileged --rm -w /workdir -v ${workdir}/:/workdir/ \
+docker pull ${e2e_engine_image}
+docker run ${docker_run_options} --init --privileged --rm -w /workdir -v ${workdir}/:/workdir/ \
   ${e2e_engine_image} bash /workdir/_run_test_case.sh
