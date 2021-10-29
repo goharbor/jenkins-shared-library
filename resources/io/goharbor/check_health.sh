@@ -12,13 +12,13 @@ usage(){
   echo "      --proxy                   The HTTP proxy used to connect to the Harbor instance"
   echo "      --host-ip-mappings        The host-to-ip mappings, split multiple items by comma, e.g. harbor.local:192.168.0.1"
   echo "      --retry                   The retry count to check the health status of the Harbor instance, wait 10 seconds between retries, default: 60"
-  echo "      --e2e-engine-image        The image of e2e engine, default: harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:dev"
+  echo "      --e2e-engine-image        The image of e2e engine, default: harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.4"
 }
 
 # the default values
 workdir="workdir"
 retry="60"
-e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:dev"
+e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.4"
 
 while [[ $# -gt 0 ]]
 do
