@@ -38,7 +38,7 @@ components="trivy,notary,chartmuseum"
 admin_password="Harbor12345"
 case_repository="https://github.com/goharbor/harbor.git"
 case_branch="main"
-e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:dev"
+e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.5"
 image_registry="harbor-repo.vmware.com"
 image_repository_prefix="harbor-ci"
 
