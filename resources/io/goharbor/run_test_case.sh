@@ -351,5 +351,5 @@ else
 fi
 
 docker pull ${e2e_engine_image}
-docker run ${docker_run_options} --init --privileged --rm -w /workdir -v ${workdir}/:/workdir/ \
+docker run ${docker_run_options} --init --privileged --rm -w /workdir -v /dev/shm:/dev/shm -v ${workdir}/:/workdir/ \
   ${e2e_engine_image} bash /workdir/_run_test_case.sh
