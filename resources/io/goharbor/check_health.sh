@@ -18,7 +18,7 @@ usage(){
 # the default values
 workdir="workdir"
 retry="60"
-e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:dev"
+e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.5"
 
 while [[ $# -gt 0 ]]
 do
