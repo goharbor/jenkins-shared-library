@@ -19,7 +19,7 @@ usage(){
 # the default values
 workdir="workdir"
 db_file="$(pwd)/trivy-db.tar.gz"
-e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:dev"
+e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.9"
 
 while [[ $# -gt 0 ]]
 do
