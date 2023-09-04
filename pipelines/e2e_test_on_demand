@@ -8,7 +8,7 @@ node() {
     catchError {
         properties([
             parameters([
-                choice(name: "version", choices: ["main", "2.3"], description: 'The version of the Harbor instance. e.g. "2.3" for Harbor v2.3.x, "main" for Harbor deployed from master branch'),
+                choice(name: "version", choices: ["main", "2.3"], description: 'The version of the Harbor instance. e.g. "2.3" for Harbor v2.3.x, "main" for Harbor deployed from main branch'),
                 string(name: 'core_service_url', defaultValue: 'https://harbor.local'),
                 string(name: 'notary_service_url', defaultValue: 'https://notary.harbor.local'),
                 string(name: 'host_ip_mappings', description: 'The host-to-ip mappings, split multiple items by comma, e.g. harbor.local:192.168.0.1,notary.harbor.local:192.168.0.1'),
@@ -47,7 +47,7 @@ node() {
         }
         stage('Test') {
             CaseSettings caseSettings = new CaseSettings()
-            caseSettings.branch = "master" // change the branch to the specific one when releases new version
+            caseSettings.branch = "main" // change the branch to the specific one when releases new version
             run_test_case(instance, caseSettings, "workdir")
         }
     }

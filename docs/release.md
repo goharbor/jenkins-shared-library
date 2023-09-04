@@ -3,11 +3,11 @@
 The mapping of Harbor version and ci code branch:
 
 | Harbor Version | CI Code Branch |
-| -------------- | -------------- |  
-|       master     |     master     |
-|      x.y.z     |      x.y       |
+|----------------|----------------|  
+| main           | main           |
+| x.y.z          | x.y            |
 
-The branch `master` is used to run the testing against Harbor `master` branch.  
+The branch `main` is used to run the testing against Harbor `main` branch.  
 And for the released Harbor with version `x.y.z`, use the branch `x.y`. e.g. use `2.3` to test Harbor with version `2.3.x`.
 
 
