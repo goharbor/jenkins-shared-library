@@ -12,7 +12,7 @@ The experimental [shared libraries](https://www.jenkins.io/doc/book/pipeline/sha
 1. Register this repository as the `Global Pipeline Libraries`(named `harbor`) in Jenkins according to this [guide](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#global-shared-libraries).
 2. Import the registered library in `Jenkinsfile`:
     ```
-    // import main branch to run cases against Harbor instance deployed from master branch
+    // import main branch to run cases against Harbor instance deployed from main branch
     @Library('harbor@main') _
     
    // import 2.3 branch to run cases against Harbor instance v2.3.x
@@ -35,7 +35,7 @@ The experimental [shared libraries](https://www.jenkins.io/doc/book/pipeline/sha
         }
         stage('Test') {
             CaseSettings caseSettings = new CaseSettings()
-            caseSettings.branch = "master"
+            caseSettings.branch = "main"
             run_test_case(instance, caseSettings, "workdir")
         }
         stage('Publish-Result') {

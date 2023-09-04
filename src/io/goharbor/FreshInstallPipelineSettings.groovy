@@ -12,7 +12,7 @@ public class FreshInstallPipelineSettings implements Serializable{
         properties = {
             return [
                 parameters([
-                    string(name: 'branch', defaultValue: 'master', description: 'The branch/tag to run for'),
+                    string(name: 'branch', defaultValue: 'main', description: 'The branch/tag to run for'),
                     choice(name: "cluster", choices: ["cluster01", "cluster02"], description: 'The Kubernetes cluster that the Harbor is deployed on')
                 ]),
                 buildDiscarder(strategy: logRotator(numToKeepStr: "6"))
@@ -29,7 +29,7 @@ public class FreshInstallPipelineSettings implements Serializable{
             }
             return [
                 parameters([
-                    string(name: 'branch', defaultValue: 'master', description: 'The branch/tag to run for'),
+                    string(name: 'branch', defaultValue: 'main', description: 'The branch/tag to run for'),
                     choice(name: "cluster", choices: names, description: 'The Kubernetes cluster that the Harbor is deployed on')
                 ])
             ]
