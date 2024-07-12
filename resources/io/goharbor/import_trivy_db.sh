@@ -13,13 +13,13 @@ usage(){
   echo "      --kube-context            The name of the kube config context to use"
   echo "      --namespace               The namespace where Harbor is deployed in, use the namespace defined in the context if not specify"
   echo "      --proxy                   The HTTP proxy used to connect to the Harbor instance"
-  echo "      --e2e-engine-image        The image of e2e engine, default: harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.10"
+  echo "      --e2e-engine-image        The image of e2e engine, default: registry.goharbor.io/harbor-ci/harbor-chart/e2e-engine:2.10"
 }
 
 # the default values
 workdir="workdir"
 db_file="$(pwd)/trivy-db.tar.gz"
-e2e_engine_image="harbor-repo.vmware.com/harbor-ci/harbor-chart/e2e-engine:2.10"
+e2e_engine_image="registry.goharbor.io/harbor-ci/harbor-chart/e2e-engine:2.10"
 
 while [[ $# -gt 0 ]]
 do
