@@ -24,6 +24,8 @@ def call(HarborInstance instance, CaseSettings settings, String workDir){
     options = settings.gitlabAccessID ? "$options --gitlab-access-id $settings.gitlabAccessID" : options
     options = settings.gitlabAccessSecret ? "$options --gitlab-access-secret $settings.gitlabAccessSecret" : options
     options = settings.gcrAccessSecret ? "$options --gcr-access-secret \'$settings.gcrAccessSecret\'" : options
+    options = settings.pipIndexURL ? "$options --pip-index-url $settings.pipIndexURL" : options
+    options = settings.openapiGeneratorCliURL ? "$options --openapi-generator-cli-url $settings.openapiGeneratorCliURL" : options
     options = workDir ? "$options --workdir $workDir" : options
 
     sh """
