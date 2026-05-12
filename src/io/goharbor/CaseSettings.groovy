@@ -14,4 +14,6 @@ public class CaseSettings implements Serializable{
     public String gitlabAccessID // the access key ID of Gitlab registry for replication test
     public String gitlabAccessSecret // the access key secret of Gitlab registry for replication test
     public String gcrAccessSecret // the access key secret of GCR for replication test
+    public String pipIndexURL // custom PyPI index URL, e.g. https://corp.example.com/simple
+    public String openapiGeneratorCliURL // custom download URL for the openapi-generator-cli JAR
 }
