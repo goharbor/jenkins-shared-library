@@ -29,6 +29,8 @@ usage(){
   echo "      --gitlab-access-id        The access key ID of Gitlab registry for replication test"
   echo "      --gitlab-access-secret    The access key secret of Gitlab registry for replication test"
   echo "      --gcr-access-secret       The access secret of GCR for replication test"
+  echo "      --pip-index-url           Custom PyPI index URL passed as PIP_INDEX_URL into the test container"
+  echo "      --openapi-generator-cli-url  Custom download URL for openapi-generator-cli JAR passed into the test container"
 }
 
 # the default values
@@ -164,12 +166,26 @@ do
       shift
       shift
       ;;
+    --pip-index-url)
+      pip_index_url="$2"
+      shift
+      shift
+      ;;
+    --openapi-generator-cli-url)
+      openapi_generator_cli_url="$2"
+      shift
+      shift
+      ;;
     *)
       echo "error: unknown option $1, try $(basename "$0") -h/--help for more information"
       exit 1
       ;;
   esac
 done
+
+# fall back to environment variables inherited from the Jenkins agent shell if CLI args were not provided
+pip_index_url="${pip_index_url:-${CORP_PIP_INDEX_URL:+https://${CORP_PIP_INDEX_URL}}}"
+openapi_generator_cli_url="${openapi_generator_cli_url:-${OPENAPI_GENERATOR_CLI_URL:-}}"
 
 # TODO group the test cases by tag/label
 # test cases to runs
@@ -349,6 +365,14 @@ if [[ "${tty}" = "false" ]]; then
   docker_run_options="-i ${docker_run_options}"
 else
   docker_run_options="-it ${docker_run_options}"
+fi
+
+# pass corporate env vars into the container if set
+if [[ -n "${pip_index_url}" ]]; then
+  docker_run_options="${docker_run_options} -e PIP_INDEX_URL=${pip_index_url}"
+fi
+if [[ -n "${openapi_generator_cli_url}" ]]; then
+  docker_run_options="${docker_run_options} -e OPENAPI_GENERATOR_CLI_URL=${openapi_generator_cli_url}"
 fi
 
 docker pull ${e2e_engine_image}
