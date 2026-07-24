@@ -19,7 +19,7 @@ usage(){
 # the default values
 workdir="workdir"
 db_file="$(pwd)/trivy-db.tar.gz"
-e2e_engine_image="registry.goharbor.io/harbor-ci/harbor-chart/e2e-engine:dev"
+e2e_engine_image="deployer:dev"
 
 while [[ $# -gt 0 ]]
 do
@@ -95,21 +95,19 @@ if [[ -n "${proxy}" ]]; then
   echo "done"
 fi
 
-if [[ -n "${kube_context}" ]]; then
-  options="--context ${kube_context}"
-fi
-
 if [[ -n "${namespace}" ]]; then
   options="\${options} --namespace ${namespace}"
 fi
 
 echo -n " > importing Trivy database... "
-tar -zxf ./trivy-db.tar.gz
+mkdir -p /tmp/trivy_db_extract
+tar -zxf ./trivy-db.tar.gz -C /tmp/trivy_db_extract
 # append "|| true" here to output more information when get no pod named trivy
 trivy_pod=\$(kubectl \${options} get pods -o custom-columns=":metadata.name" | grep trivy || true)
 kubectl \${options} exec -i \${trivy_pod} -- mkdir -p /home/scanner/.cache/trivy/db/
-cat ./trivy_db/metadata.json | kubectl \${options} exec -i \${trivy_pod} -- tee /home/scanner/.cache/trivy/db/metadata.json 1>/dev/null
-cat ./trivy_db/trivy.db | kubectl \${options} exec -i \${trivy_pod} -- tee /home/scanner/.cache/trivy/db/trivy.db 1>/dev/null
+cat /tmp/trivy_db_extract/trivy_db/metadata.json | kubectl \${options} exec -i \${trivy_pod} -- tee /home/scanner/.cache/trivy/db/metadata.json 1>/dev/null
+cat /tmp/trivy_db_extract/trivy_db/trivy.db | kubectl \${options} exec -i \${trivy_pod} -- tee /home/scanner/.cache/trivy/db/trivy.db 1>/dev/null
+rm -rf /tmp/trivy_db_extract
 echo "done"
 EOF
 
@@ -120,6 +118,6 @@ else
   docker_run_options="-it"
 fi
 
-docker run ${docker_run_options} --init --privileged --rm -w /workdir -v ${workdir}/:/workdir/ \
-  -v ${kube_config}:/root/.kube/config -v ${db_file}:/workdir/trivy-db.tar.gz \
-  ${e2e_engine_image} bash /workdir/_import_trivy_db.sh
+docker run ${docker_run_options} --init --privileged --rm -w /workdir -v ${workdir}/:/workdir/:rw \
+  -v /root/.kube/config:/root/.kube/config -v /root/.aws:/root/.aws:ro -v ${db_file}:/workdir/trivy-db.tar.gz \
+  ${e2e_engine_image} bash +x /workdir/_import_trivy_db.sh
