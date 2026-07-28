@@ -75,11 +75,6 @@ do
   esac
 done
 
-if [[ -z "${kube_config}" ]]; then
-  echo 'the "--kube-config" option is required'
-  exit 1
-fi
-
 # make workdir if not exists
 workdir=$(mkdir -p ${workdir};cd ${workdir};pwd)
 
