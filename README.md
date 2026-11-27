@@ -15,14 +15,14 @@ The experimental [shared libraries](https://www.jenkins.io/doc/book/pipeline/sha
     // import main branch to run cases against Harbor instance deployed from main branch
     @Library('harbor@main') _
     
-   // import 2.3 branch to run cases against Harbor instance v2.3.x
-    @Library('harbor@2.3') _
+   // import 2.16 branch to run cases against Harbor instance v2.16.x
+    @Library('harbor@2.16') _
     ```
-   **Notes: Import the corresponding branch of the library for the Harbor instance to be tested. e.g. for Harbor v2.3.x importing branch 2.3**
+   **Notes: Import the corresponding branch of the library for the Harbor instance to be tested. e.g. for Harbor v2.16.x importing branch 2.16**
    
 3. Use the libraries in `Jenkinsfile`
     ```
-    @Library('harbor@main') _
+    @Library('harbor@2.16') _
     import io.goharbor.*
     
     node() {
@@ -35,7 +35,7 @@ The experimental [shared libraries](https://www.jenkins.io/doc/book/pipeline/sha
         }
         stage('Test') {
             CaseSettings caseSettings = new CaseSettings()
-            caseSettings.branch = "main"
+            caseSettings.branch = "release-2.16.0"
             run_test_case(instance, caseSettings, "workdir")
         }
         stage('Publish-Result') {
